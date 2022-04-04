@@ -7,7 +7,7 @@ redisClient.on('error', (err) => {
 	console.log('Redis redisClient Error', err);
 });
 
-function redisSet(key, val) {
+/*function redisSet(key, val) {
 	if (typeof val === 'object') {
 		val = JSON.stringify(val);
 	}
@@ -33,10 +33,10 @@ function redisGet(key) {
 			}
 		});
 	});
-}
+}*/
 
 module.exports = {
-	redisSet,
-	redisGet,
+	/*redisSet,
+	redisGet,*/
 	redisClient
 };
