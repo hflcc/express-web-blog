@@ -19,6 +19,7 @@ module.exports = {
 		],
 		'semi': ['error', 'always'],
 		'quotes': ['error', 'single'],
-		'no-multi-spaces': 'error'
+		'no-multi-spaces': 'error',
+		'no-unused-vars': 'off' // 关闭校验未使用变量
 	}
 };

@@ -11,7 +11,6 @@ router.get('/list', loginCheck, async (req, res, next) => {
 	const keyword = req.query.keyword || '';
 	const list = await getBlogList(author, keyword);
 	res.json(new SuccessModel(list));
-	next();
 });
 
 // 获取用户信息
@@ -19,7 +18,6 @@ router.get('/user', async (req, res, next) => {
 	const id = req.query.id;
 	if (!id) {
 		res.json(new ErrorModel([], '查询id不能为空'));
-		next();
 		return;
 	}
 	const result = await getUserInfo(id);
@@ -27,7 +25,6 @@ router.get('/user', async (req, res, next) => {
 		const obj = res[0] || {};
 		res.json(new SuccessModel(obj, '查询成功'));
 	}
-	next();
 });
 
 // 获取博客详情
@@ -37,13 +34,11 @@ router.get('/detail', async (req, res, next) => {
 		res.json(
 			new ErrorModel({}, '微博ID不能为空')
 		);
-		next();
 		return;
 	}
 	const data = await getBlogDetail(id);
 	if (data) {
 		res.json(new SuccessModel(data, '查询成功'));
-		next();
 	}
 });
 
@@ -54,7 +49,6 @@ router.post('/new', loginCheck, async (req, res, next) => {
 	const data = await newBlog(req.body);
 	if(data) {
 		res.json(new SuccessModel({ id: data.insertId }, '新增博客成功'));
-		next();
 	}
 });
 
@@ -64,11 +58,9 @@ router.post('/update', loginCheck, async (req, res, next) => {
 	const result = await updateBlog(id, req.body);
 	if (result) {
 		res.json(new SuccessModel(result, '更新成功'));
-		next();
 		return;
 	}
 	res.json(new ErrorModel(false, '更新失败'));
-	next();
 });
 
 // 删除博客
@@ -77,11 +69,9 @@ router.post('/del', loginCheck, async (req, res, next) => {
 	const result = await delBlog(id, req.session.username);
 	if (result) {
 		res.json(new SuccessModel(true, '删除成功'));
-		next();
 		return;
 	}
 	res.json(new ErrorModel(false, '删除失败'));
-	next();
 });
 
 module.exports = router;
