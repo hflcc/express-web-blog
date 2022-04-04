@@ -32,6 +32,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+// session中间件
 app.use(session({
 	store: new RedisStore({
 		client: redisClient
