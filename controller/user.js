@@ -4,7 +4,7 @@ const { getPassword } = require('../utils/cryp');
 const login = async (username, password) => {
 	username = escape(username);
 
-	// 将用户传入的密码进行加密后去查询 TODO 注意:目前数据库中的密码未加密,目前匹配不上
+	// 将用户传入的密码进行加密后去查询
 	password = getPassword(password);
 	password = escape(password);
 	let sql = `select username,realname from users where username=${username} and password=${password}`;
