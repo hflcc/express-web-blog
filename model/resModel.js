@@ -28,9 +28,9 @@ class SuccessModel extends BaseModel {
 }
 
 class ErrorModel extends BaseModel {
-	constructor(data, message) {
+	constructor(data, message, code = -1) {
 		super(data, message);
-		this.code = -1;
+		this.code = code;
 	}
 }
 

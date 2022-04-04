@@ -5,6 +5,7 @@ const { redisClient } = require('./db/redis');
 const logger = require('morgan');
 const session = require('express-session');
 const RedisStore = require('connect-redis')(session);
+const { ErrorModel } = require('./model/resModel');
 
 const usersRouter = require('./routes/user');
 const blogsRouter = require('./routes/blog');
@@ -44,7 +45,11 @@ app.use(function(err, req, res, next) {
 
 	// render the error page
 	res.status(err.status || 500);
-	res.render('error');
+	if (err) {
+		res.json(
+			new ErrorModel(false, err.message, err.status)
+		);
+	}
 });
 
 module.exports = app;
