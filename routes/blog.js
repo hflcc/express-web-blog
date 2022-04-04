@@ -2,16 +2,11 @@ const { SuccessModel, ErrorModel } = require('../model/resModel');
 const { getBlogList, getBlogDetail, newBlog, updateBlog, delBlog } = require('../controller/blog');
 const express = require('express');
 const { getUserInfo } = require('../controller/user');
+const { loginCheck } = require('../middleware/loginCheck');
 const router = express.Router();
-// 统一的登录验证函数
-const loginCheck = (req) => {
-	if (!req.session.username) {
-		return Promise.resolve(new ErrorModel(false, '尚未登录'));
-	}
-};
 
 // 获取博客列表
-router.get('/list', async (req, res, next) => {
+router.get('/list', loginCheck, async (req, res, next) => {
 	const author = req.query.author || '';
 	const keyword = req.query.keyword || '';
 	const list = await getBlogList(author, keyword);
@@ -52,16 +47,8 @@ router.get('/detail', async (req, res, next) => {
 	}
 });
 
-// 新建博客
-router.post('/new', async (req, res, next) => {
-	// 校验有无登录
-	const loginCheckResult = loginCheck(req);
-	if (loginCheckResult) {
-		res.json(loginCheckResult);
-		next();
-		return;
-	}
-
+// 新建博客 (需要登录校验中间件)
+router.post('/new', loginCheck, async (req, res, next) => {
 	req.body.author = req.session.username;
 
 	const data = await newBlog(req.body);
@@ -72,15 +59,8 @@ router.post('/new', async (req, res, next) => {
 });
 
 // 更新博客
-router.post('/update', async (req, res, next) => {
+router.post('/update', loginCheck, async (req, res, next) => {
 	const id = req.query.id;
-	// 校验有无登录
-	const loginCheckResult = loginCheck(req);
-	if (loginCheckResult) {
-		res.json(loginCheckResult);
-		next();
-		return;
-	}
 	const result = await updateBlog(id, req.body);
 	if (result) {
 		res.json(new SuccessModel(result, '更新成功'));
@@ -92,15 +72,8 @@ router.post('/update', async (req, res, next) => {
 });
 
 // 删除博客
-router.post('/del', async (req, res, next) => {
+router.post('/del', loginCheck, async (req, res, next) => {
 	const id = req.query.id;
-	// 校验有无登录
-	const loginCheckResult = loginCheck(req);
-	if (loginCheckResult) {
-		res.json(loginCheckResult);
-		next();
-		return;
-	}
 	const result = await delBlog(id, req.session.username);
 	if (result) {
 		res.json(new SuccessModel(true, '删除成功'));
