@@ -1,7 +1,11 @@
 const createError = require('http-errors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const { redisClient } = require('./db/redis');
 const logger = require('morgan');
+const session = require('express-session');
+const RedisStore = require('connect-redis')(session);
+
 const usersRouter = require('./routes/user');
 const blogsRouter = require('./routes/blog');
 
@@ -11,6 +15,18 @@ app.use(logger('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
+
+app.use(session({
+	store: new RedisStore({
+		client: redisClient
+	}),
+	secret: 'JHLwer_234jl12!',
+	cookie: {
+		path: '/',
+		httpOnly: true,
+		maxAge: 24 * 3600 * 1000 // 24小时
+	}
+}));
 // app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/api/user', usersRouter);
