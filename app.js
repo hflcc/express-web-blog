@@ -1,3 +1,6 @@
+const ENV = process.env.NODE_ENV;
+const path = require('path');
+const fs = require('fs');
 const createError = require('http-errors');
 const express = require('express');
 const cookieParser = require('cookie-parser');
@@ -12,7 +15,19 @@ const blogsRouter = require('./routes/blog');
 
 const app = express();
 
-app.use(logger('dev'));
+// 日志
+if (ENV === 'dev') {
+	app.use(logger('dev'));
+} else {
+	const fileName = path.join(__dirname, 'logs', 'access.log');
+	const writeStream = fs.createWriteStream(fileName, {
+		flags: 'a'
+	});
+	app.use(logger('combined', {
+		stream: writeStream
+	}));
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
