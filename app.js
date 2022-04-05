@@ -37,6 +37,8 @@ app.use(session({
 	store: new RedisStore({
 		client: redisClient
 	}),
+	resave: true,
+	saveUninitialized: true,
 	secret: 'JHLwer_234jl12!',
 	cookie: {
 		path: '/',
