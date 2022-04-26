@@ -70,4 +70,13 @@ app.use(function(err, req, res, next) {
 	}
 });
 
+// 全局promise异常
+process.on('unhandledRejection', (err) => {
+	console.error('unhandleRejection', err.message);
+});
+// 全局异常捕获
+process.on('uncaughtException', (err) => {
+	console.error('uncaughtException', err.message);
+});
+
 module.exports = app;
